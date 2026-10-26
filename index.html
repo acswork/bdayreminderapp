@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!--
+  Landing page for shared birthday groups.
+
+  Host this file at the address in `shareBaseURL` (ContentView.swift), for example
+  with GitHub Pages: a repo named "birthdays" with this file at its root becomes
+  https://YOUR-USERNAME.github.io/birthdays/
+
+  TODO before release:
+    1. Replace YOUR_APP_ID below (twice) with the app's App Store ID (the digits in its App Store link).
+    2. Replace APP_STORE_URL with the app's App Store link.
+
+  The group's names and dates are in the part of the link after "#". Browsers never
+  send that part to the server, so this page reads it locally and passes it to the app.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <!-- Safari shows Apple's "Open" / "Get" app banner at the top of the page. -->
+  <meta name="apple-itunes-app" content="app-id=YOUR_APP_ID">
+  <title>Birthday group</title>
+  <style>
+    body { font-family: -apple-system, system-ui, sans-serif; background: #000; color: #fff;
+           margin: 0; padding: 48px 24px; text-align: center; }
+    .card { max-width: 420px; margin: 0 auto; }
+    h1 { font-size: 28px; margin: 12px 0 4px; }
+    p { color: #98989f; line-height: 1.4; }
+    ul { list-style: none; padding: 0; margin: 24px 0; text-align: left;
+         background: #1c1c1e; border-radius: 12px; }
+    li { padding: 12px 16px; border-bottom: 1px solid #2c2c2e; display: flex; justify-content: space-between; }
+    li:last-child { border-bottom: none; }
+    li span { color: #98989f; }
+    a.button { display: block; padding: 14px; border-radius: 12px; font-weight: 600;
+               text-decoration: none; margin-top: 12px; }
+    .primary { background: #0a84ff; color: #fff; }
+    .secondary { background: #1c1c1e; color: #0a84ff; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div style="font-size: 56px">🎂</div>
+    <h1 id="title">Birthday group</h1>
+    <p id="subtitle">Someone shared birthdays with you.</p>
+    <ul id="people" hidden></ul>
+    <a class="button primary" id="get" href="APP_STORE_URL">Download the Birthdays app</a>
+    <a class="button secondary" id="open" href="birthdaysapp://group">Already have it? Open in the app</a>
+    <p style="font-size: 13px; margin-top: 24px">After downloading, come back to this message and tap the link again to add the group.</p>
+  </div>
+  <script>
+    const months = ["January","February","March","April","May","June","July",
+                    "August","September","October","November","December"];
+    const code = location.hash.slice(1);
+    if (code) {
+      // Hand the same code to the app.
+      document.getElementById("open").href = "birthdaysapp://group#" + code;
+      try {
+        // Undo the app's URL-safe base64, then read the JSON as UTF-8.
+        let b64 = code.replace(/-/g, "+").replace(/_/g, "/");
+        while (b64.length % 4) b64 += "=";
+        const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+        const group = JSON.parse(new TextDecoder().decode(bytes));
+        const count = group.people.length;
+        document.getElementById("title").textContent = group.name;
+        document.getElementById("subtitle").textContent =
+          `${count} date${count === 1 ? "" : "s"} shared with you.`;
+        const list = document.getElementById("people");
+        for (const p of group.people) {
+          const li = document.createElement("li");
+          const date = document.createElement("span");
+          // Older links have no kind; they were all birthdays.
+          const emoji = { anniversary: "💍 ", workAnniversary: "💼 ", memorial: "🕯️ ", pet: "🐾 ", other: "📅 " }[p.kind] ?? "";
+          li.textContent = emoji + p.name;   // textContent, never innerHTML: names come from the link
+          date.textContent = `${months[p.month - 1] ?? ""} ${p.day}`;
+          li.appendChild(date);
+          list.appendChild(li);
+        }
+        list.hidden = false;
+      } catch (e) {
+        document.getElementById("subtitle").textContent = "This link looks incomplete. Ask the sender to share it again.";
+      }
+    }
+  </script>
+</body>
+</html>
