@@ -4,11 +4,9 @@
 
   Host this file at the address in `shareBaseURL` (ContentView.swift), for example
   with GitHub Pages: a repo named "birthdays" with this file at its root becomes
-  https://YOUR-USERNAME.github.io/birthdays/
+  https://acswork.github.io/bdayreminderapp/
 
-  TODO before release:
-    1. Replace YOUR_APP_ID below (twice) with the app's App Store ID (the digits in its App Store link).
-    2. Replace APP_STORE_URL with the app's App Store link.
+  App Store ID 6824582080 and its link are filled in below.
 
   The group's names and dates are in the part of the link after "#". Browsers never
   send that part to the server, so this page reads it locally and passes it to the app.
@@ -19,7 +17,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
   <!-- Safari shows Apple's "Open" / "Get" app banner at the top of the page. -->
-  <meta name="apple-itunes-app" content="app-id=YOUR_APP_ID">
+  <meta name="apple-itunes-app" content="app-id=6824582080">
   <title>Birthday group</title>
   <style>
     body { font-family: -apple-system, system-ui, sans-serif; background: #000; color: #fff;
@@ -44,7 +42,7 @@
     <h1 id="title">Birthday group</h1>
     <p id="subtitle">Someone shared birthdays with you.</p>
     <ul id="people" hidden></ul>
-    <a class="button primary" id="get" href="APP_STORE_URL">Download the Birthdays app</a>
+    <a class="button primary" id="get" href="https://apps.apple.com/app/id6824582080">Download the Birthdays app</a>
     <a class="button secondary" id="open" href="birthdaysapp://group">Already have it? Open in the app</a>
     <p style="font-size: 13px; margin-top: 24px">After downloading, come back to this message and tap the link again to add the group.</p>
   </div>
